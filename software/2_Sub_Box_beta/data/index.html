@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+.overlay {
+    z-index: 20;
+    opacity: 80%;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    background: #222;
+}
+
+.overlay__inner {
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+.overlay__content {
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.spinner {
+    width: 75px;
+    height: 75px;
+    display: inline-block;
+    border-width: 2px;
+    border-color: rgba(255, 255, 255, 0.05);
+    border-top-color: #fff;
+    animation: spin 1s infinite linear;
+    border-radius: 100%;
+    border-style: solid;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.card {
+  margin: 3%;
+  padding: 2%;
+  justify-content: center;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  width: 90%;
+  border-radius: 5px;
+}
+
+.button {
+  position: relative;
+  background-color: #9258ad;
+  border: none;
+  font-size: 28px;
+  color: #FFFFFF;
+  padding: 20px;
+  width: 200px;
+  text-align: center;
+  transition-duration: 0.4s;
+  text-decoration: none;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.button:after {
+  content: "";
+  background: #f1f1f1;
+  display: block;
+  position: absolute;
+  padding-top: 300%;
+  padding-left: 350%;
+  margin-left: -20px !important;
+  margin-top: -120%;
+  opacity: 0;
+  transition: all 0.8s
+}
+
+.button:active:after {
+  padding: 0;
+  margin: 0;
+  opacity: 1;
+  transition: 0s
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 15px;
+  border-radius: 5px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #9258ad;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #9258ad;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<div class="overlay" id="loading">
+    <div class="overlay__inner">
+        <div class="overlay__content"><span class="spinner"></span></div>
+    </div>
+</div>
+
+<h1>2.1 System</h1>
+
+<div class="card">
+  <h2>Volume</h2>
+  <h3>Bluetooth</h3>
+  <input type="range" min="-50" max="6" value="0" class="slider" id="bt_vol">
+  <p>Value: <span id="bt_vol_text"></span> dB</p>
+  <h3>AUX</h3>
+  <input type="range" min="-50" max="6" value="0" class="slider" id="aux_vol">
+  <p>Value: <span id="aux_vol_text"></span> dB</p>
+  <h3>Main</h3>
+  <input type="range" min="-50" max="6" value="0" class="slider" id="main_vol">
+  <p>Value: <span id="main_vol_text"></span> dB</p>
+  <button class="button" value="Apply" onclick="submit_vol()">Apply</button>
+</div> 
+<div class="card">
+  <h2>EQ</h2>
+  <h3>50 Hz</h3>
+  <input type="range" min="-50" max="6" value="0" class="slider" id="EQband1">
+  <p>Value: <span id="EQband1_text"></span> dB</p>
+  <h3>120 Hz</h3>
+  <input type="range" min="-50" max="6" value="0" class="slider" id="EQband2">
+  <p>Value: <span id="EQband2_text"></span> dB</p>
+  <h3>500 Hz</h3>
+  <input type="range" min="-50" max="6" value="0" class="slider" id="EQband3">
+  <p>Value: <span id="EQband3_text"></span> dB</p>
+  <h3>1k Hz</h3>
+  <input type="range" min="-50" max="6" value="0" class="slider" id="EQband4">
+  <p>Value: <span id="EQband4_text"></span> dB</p>
+  <h3>2k Hz</h3>
+  <input type="range" min="-50" max="6" value="0" class="slider" id="EQband5">
+  <p>Value: <span id="EQband5_text"></span> dB</p>
+  <h3>10k Hz</h3>
+  <input type="range" min="-50" max="6" value="0" class="slider" id="EQband6">
+  <p>Value: <span id="EQband6_text"></span> dB</p>
+  <h3>20k Hz</h3>
+  <input type="range" min="-50" max="6" value="0" class="slider" id="EQband7">
+  <p>Value: <span id="EQband7_text"></span> dB</p>
+  <button class="button" value="Apply" onclick="submit_eq()">Apply</button>
+</div>
+<div class="card">
+  <h2>Subwoofer</h2>
+  <h3>Cutoff</h3>
+  <input type="range" min="50" max="300" value="100" class="slider" id="sub_cutoff">
+  <p>Value: <span id="sub_cutoff_text"></span> Hz</p>
+  <h3>Volume</h3>
+  <input type="range" min="-50" max="6" value="0" class="slider" id="sub_vol">
+  <p>Value: <span id="sub_vol_text"></span> dB</p>
+  <button class="button" value="Apply" onclick="submit_sub()">Apply</button>
+</div>
+<div class="card">
+  <h2>Save Values</h2>
+  <button class="button" value="Save" onclick="submit_eeprom()">Save</button>
+</div>
+
+<script>
+
+var host = window.location.host;
+
+document.getElementById("bt_vol").oninput = function() { document.getElementById("bt_vol_text").innerHTML = this.value; }
+document.getElementById("aux_vol").oninput = function() { document.getElementById("aux_vol_text").innerHTML = this.value; }
+document.getElementById("main_vol").oninput = function() { document.getElementById("main_vol_text").innerHTML = this.value; }
+document.getElementById("EQband1").oninput = function() { document.getElementById("EQband1_text").innerHTML = this.value; }
+document.getElementById("EQband2").oninput = function() { document.getElementById("EQband2_text").innerHTML = this.value; }
+document.getElementById("EQband3").oninput = function() { document.getElementById("EQband3_text").innerHTML = this.value; }
+document.getElementById("EQband4").oninput = function() { document.getElementById("EQband4_text").innerHTML = this.value; }
+document.getElementById("EQband5").oninput = function() { document.getElementById("EQband5_text").innerHTML = this.value; }
+document.getElementById("EQband6").oninput = function() { document.getElementById("EQband6_text").innerHTML = this.value; }
+document.getElementById("EQband7").oninput = function() { document.getElementById("EQband7_text").innerHTML = this.value; }
+document.getElementById("sub_cutoff").oninput = function() { document.getElementById("sub_cutoff_text").innerHTML = this.value; }
+document.getElementById("sub_vol").oninput = function() { document.getElementById("sub_vol_text").innerHTML = this.value; }
+
+var getJSON = function(url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.responseType = 'json';
+    xhr.onload = function() {
+        var status = xhr.status;
+        if (status == 200) {
+            callback(null, xhr.response);
+        } else {
+            callback(status);
+        }
+    };
+    xhr.send();
+};
+
+getJSON("/get",  function(err, data) {
+    if (err != null) {
+        console.error(err);
+    } else {
+      document.getElementById("bt_vol").value = data.bt_vol;
+      document.getElementById("aux_vol").value = data.aux_vol;
+      document.getElementById("main_vol").value = data.main_vol;
+      document.getElementById("EQband1").value = data.EQband1;
+      document.getElementById("EQband2").value = data.EQband2;
+      document.getElementById("EQband3").value = data.EQband3;
+      document.getElementById("EQband4").value = data.EQband4;
+      document.getElementById("EQband5").value = data.EQband5;
+      document.getElementById("EQband6").value = data.EQband6;
+      document.getElementById("EQband7").value = data.EQband7;
+      document.getElementById("sub_cutoff").value = data.sub_cutoff;
+      document.getElementById("sub_vol").value = data.sub_vol;
+
+      document.getElementById("bt_vol_text").innerHTML = document.getElementById("bt_vol").value;
+      document.getElementById("aux_vol_text").innerHTML = document.getElementById("aux_vol").value;
+      document.getElementById("main_vol_text").innerHTML = document.getElementById("main_vol").value;
+      document.getElementById("EQband1_text").innerHTML = document.getElementById("EQband1").value;
+      document.getElementById("EQband2_text").innerHTML = document.getElementById("EQband2").value;
+      document.getElementById("EQband3_text").innerHTML = document.getElementById("EQband3").value;
+      document.getElementById("EQband4_text").innerHTML = document.getElementById("EQband4").value;
+      document.getElementById("EQband5_text").innerHTML = document.getElementById("EQband5").value;
+      document.getElementById("EQband6_text").innerHTML = document.getElementById("EQband6").value;
+      document.getElementById("EQband7_text").innerHTML = document.getElementById("EQband7").value;
+      document.getElementById("sub_cutoff_text").innerHTML = document.getElementById("sub_cutoff").value;
+      document.getElementById("sub_vol_text").innerHTML = document.getElementById("sub_vol").value;
+
+      document.getElementById("loading").style.display="none"
+    }
+});
+
+function submit_vol() {
+  var xhttp = new XMLHttpRequest();
+  var param = "/set?";
+
+  param += "bt_vol=" + document.getElementById("bt_vol").value;
+  param += "&aux_vol=" + document.getElementById("aux_vol").value;
+  param += "&main_vol=" + document.getElementById("main_vol").value;
+  
+  xhttp.open("GET", param, true);
+  xhttp.send();
+}
+
+function submit_eq() {
+  var xhttp = new XMLHttpRequest();
+  var param = "/set?";
+
+  param += "&EQband1=" + document.getElementById("EQband1").value;
+  param += "&EQband2=" + document.getElementById("EQband2").value;
+  param += "&EQband3=" + document.getElementById("EQband3").value;
+  param += "&EQband4=" + document.getElementById("EQband4").value;
+  param += "&EQband5=" + document.getElementById("EQband5").value;
+  param += "&EQband6=" + document.getElementById("EQband6").value;
+  param += "&EQband7=" + document.getElementById("EQband7").value;
+  
+  xhttp.open("GET", param, true);
+  xhttp.send();
+}
+
+function submit_sub() {
+  var xhttp = new XMLHttpRequest();
+  var param = "/set?";
+
+  param += "&sub_cutoff=" + document.getElementById("sub_cutoff").value;
+  param += "&sub_vol=" + document.getElementById("sub_vol").value;
+  
+  xhttp.open("GET", param, true);
+  xhttp.send();
+}
+
+function submit_eeprom() {
+  var xhttp = new XMLHttpRequest();
+  var param = "/eeprom";
+  
+  xhttp.open("GET", param, true);
+  xhttp.send();
+}
+
+</script>
+
+</body>
+</html>
